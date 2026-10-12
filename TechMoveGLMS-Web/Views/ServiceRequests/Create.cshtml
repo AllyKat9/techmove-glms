@@ -1,0 +1,105 @@
+﻿@model dynamic
+@using TechMoveGLMS_Web.Data.DTOs
+@using TechMoveGLMS_Web.Models
+
+<h2>Create Service Request</h2>
+
+@if (TempData["Warning"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Warning"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form id="serviceRequestForm" method="post" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group mb-3">
+                <label class="form-label fw-bold">Select Contract</label>
+                <select name="contractId" id="contractId" class="form-control" required>
+                    <option value="">-- Select Active Contract --</option>
+                    @if (ViewBag.Contracts != null)
+                    {
+                        foreach (ContractResponseDto contract in ViewBag.Contracts)
+                        {
+                            <option value="@contract.Id">@contract.ClientName - @contract.ServiceLevel (Expires: @contract.EndDate.ToShortDateString())</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label class="form-label fw-bold">Description</label>
+                <textarea name="description" class="form-control" rows="3" required placeholder="Describe the service request..."></textarea>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label class="form-label fw-bold">Cost (USD)</label>
+                <input type="number" name="costUSD" id="costUSD" class="form-control" step="0.01" required placeholder="0.00" />
+            </div>
+            
+            <div class="form-group mb-3">
+                <label class="form-label fw-bold">Cost (ZAR)</label>
+                <input type="text" id="costZAR" class="form-control" readonly style="background-color: #e9ecef;" />
+                <small class="text-muted">Auto-calculated using live exchange rate</small>
+            </div>
+            
+            <div class="alert alert-info">
+                <strong>Current Exchange Rate:</strong> 1 USD = <span id="exchangeRate">Loading...</span> ZAR
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Create Request</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentRate = 0;
+        
+        // Fetch exchange rate on page load
+        async function fetchExchangeRate() {
+            try {
+                const response = await fetch('/ServiceRequests/GetExchangeRate');
+                const data = await response.json();
+                currentRate = data.rate;
+                document.getElementById('exchangeRate').innerText = currentRate.toFixed(2);
+            } catch (error) {
+                console.error('Error fetching rate:', error);
+                document.getElementById('exchangeRate').innerText = '19.50 (fallback)';
+                currentRate = 19.50;
+            }
+        }
+        
+        // Calculate ZAR when USD changes
+        function calculateZAR() {
+            const usdInput = document.getElementById('costUSD');
+            const zarInput = document.getElementById('costZAR');
+            const usdAmount = parseFloat(usdInput.value) || 0;
+            const zarAmount = usdAmount * currentRate;
+            zarInput.value = zarAmount.toFixed(2);
+        }
+        
+        // Set up event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchExchangeRate();
+            
+            const usdInput = document.getElementById('costUSD');
+            if (usdInput) {
+                usdInput.addEventListener('input', calculateZAR);
+            }
+        });
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

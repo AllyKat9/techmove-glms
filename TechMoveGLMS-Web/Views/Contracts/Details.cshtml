@@ -1,0 +1,95 @@
+﻿@model TechMoveGLMS_Web.Data.DTOs.ContractResponseDto
+@using TechMoveGLMS_Web.Models
+
+<h2>Contract Details</h2>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4>@Model.ClientName</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Contract ID:</dt>
+                    <dd class="col-sm-8">@Model.Id</dd>
+
+                    <dt class="col-sm-4">Start Date:</dt>
+                    <dd class="col-sm-8">@Model.StartDate.ToShortDateString()</dd>
+
+                    <dt class="col-sm-4">End Date:</dt>
+                    <dd class="col-sm-8">@Model.EndDate.ToShortDateString()</dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Status == ContractStatus.Active)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else if (Model.Status == ContractStatus.Expired)
+                        {
+                            <span class="badge bg-danger">Expired</span>
+                        }
+                        else if (Model.Status == ContractStatus.OnHold)
+                        {
+                            <span class="badge bg-warning">On Hold</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Draft</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Service Level:</dt>
+                    <dd class="col-sm-8">@Model.ServiceLevel</dd>
+
+                    <dt class="col-sm-4">Client Region:</dt>
+                    <dd class="col-sm-8">@Model.ClientRegion</dd>
+
+                    <dt class="col-sm-4">Contact:</dt>
+                    <dd class="col-sm-8">@Model.ClientContactDetails</dd>
+                </dl>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.SignedAgreementPath))
+        {
+            <div class="alert alert-info">
+                <strong>📄 Signed Agreement:</strong> @Model.OriginalFileName
+                <a asp-action="DownloadAgreement" asp-route-id="@Model.Id" class="btn btn-sm btn-success ms-3">Download PDF</a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+<h3 class="mt-4">Service Requests</h3>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Cost (USD)</th>
+            <th>Cost (ZAR)</th>
+            <th>Status</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in (List<ServiceRequest>)ViewBag.ServiceRequests)
+        {
+            <tr>
+                <td>@request.Description</td>
+                <td>$@request.CostUSD</td>
+                <td>R@(request.CostZAR)</td>
+                <td>@request.Status</td>
+                <td>@request.CreatedAt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

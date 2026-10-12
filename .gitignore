@@ -1,0 +1,37 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## User-specific config 
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.pfx
+.env
+.env.local
+
+## Uploaded files
+**/wwwroot/uploads/**
+!**/wwwroot/uploads/**/.gitkeep
+
+## Database files
+*.mdf
+*.ldf
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Docker
+data/

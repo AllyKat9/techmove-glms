@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TechMoveGLMS_Web.Models.ServiceRequest>
+@using TechMoveGLMS_Web.Models
+
+<h2>Service Requests</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">+ New Service Request</a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Contract</th>
+            <th>Client</th>
+            <th>Description</th>
+            <th>Cost (USD)</th>
+            <th>Cost (ZAR)</th>
+            <th>Exchange Rate</th>
+            <th>Status</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Contract?.Id</td>
+                <td>@item.Contract?.Client?.Name</td>
+                <td>@item.Description</td>
+                <td>$@item.CostUSD.ToString("N2")</td>
+                <td>R@(item.CostZAR.ToString("N2"))</td>
+                <td>@item.ExchangeRateUsed.ToString("N2")</td>
+                <td>
+                    @switch (item.Status)
+                    {
+                        case RequestStatus.Pending:
+                            <span class="badge bg-warning">Pending</span>
+                            break;
+                        case RequestStatus.Approved:
+                            <span class="badge bg-info">Approved</span>
+                            break;
+                        case RequestStatus.InProgress:
+                            <span class="badge bg-primary">In Progress</span>
+                            break;
+                        case RequestStatus.Completed:
+                            <span class="badge bg-success">Completed</span>
+                            break;
+                        default:
+                            <span class="badge bg-secondary">@item.Status</span>
+                            break;
+                    }
+                </td>
+                <td>@item.CreatedAt.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Dashboard</h2>
+        <p class="text-muted">Welcome to TechMove Global Logistics Management System</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number">@ViewBag.TotalClients</div>
+            <div class="stat-label">Total Clients</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number">@ViewBag.TotalContracts</div>
+            <div class="stat-label">Total Contracts</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number">@ViewBag.ActiveContracts</div>
+            <div class="stat-label">Active Contracts</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number">@ViewBag.PendingRequests</div>
+            <div class="stat-label">Pending Requests</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Quick Actions
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-controller="Clients" asp-action="Create" class="btn btn-primary">➕ Add New Client</a>
+                    <a asp-controller="Contracts" asp-action="Create" class="btn btn-primary">📄 Create New Contract</a>
+                    <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-primary">🚚 New Service Request</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Recent Activity
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center py-4">System ready for operations</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TechMoveGLMS_Web.Data.DTOs.ContractResponseDto>
+@using TechMoveGLMS_Web.Models
+
+<h2>Contracts</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">+ New Contract</a>
+    <a asp-action="Search" class="btn btn-info">🔍 Search Contracts</a>
+</p>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Client</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Service Level</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ClientName</td>
+                <td>@item.StartDate.ToShortDateString()</td>
+                <td>@item.EndDate.ToShortDateString()</td>
+                <td>
+                    @if (item.Status == ContractStatus.Active)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else if (item.Status == ContractStatus.Expired)
+                    {
+                        <span class="badge bg-danger">Expired</span>
+                    }
+                    else if (item.Status == ContractStatus.OnHold)
+                    {
+                        <span class="badge bg-warning">On Hold</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Draft</span>
+                    }
+                </td>
+                <td>@item.ServiceLevel</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="DownloadAgreement" asp-route-id="@item.Id" class="btn btn-sm btn-success">Download PDF</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
